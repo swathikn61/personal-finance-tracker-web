@@ -1,0 +1,27 @@
+# Secrets
+.env
+
+# Build output
+dist/
+
+# npm
+node_modules/
+package-lock.json
+npm-shrinkwrap.json
+*.log
+*.gz
+
+# Yarn
+yarn-error.log
+yarn.lock
+
+# Coveralls
+.nyc_output
+coverage
+
+# Benchmarking
+benchmarks/graphs
+
+# macOS
+.DS_Store
+**/.DS_Store

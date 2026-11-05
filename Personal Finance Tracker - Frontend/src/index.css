@@ -1,0 +1,117 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-success: var(--success);
+    --color-brand: var(--brand);
+    --color-brand-foreground: var(--brand-foreground);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Palette: Rich Black #171717 · Champagne Gold #C5A46D · Warm Ivory #F8F5EF · Pure White #FFFFFF
+   · Muted Gold #E9DFC9 · Success Green #25865A · Muted Rose #C75B66 */
+:root {
+    color-scheme: light;
+    --pft-black: #171717;
+    --pft-gold: #C5A46D;
+    --pft-ivory: #F8F5EF;
+    --pft-white: #FFFFFF;
+    --pft-muted-gold: #E9DFC9;
+    --pft-green: #25865A;
+    --pft-rose: #C75B66;
+
+    --background: var(--pft-ivory);
+    --foreground: var(--pft-black);
+    --card: var(--pft-white);
+    --card-foreground: var(--pft-black);
+    --popover: var(--pft-white);
+    --popover-foreground: var(--pft-black);
+    --primary: var(--pft-black);
+    --primary-foreground: var(--pft-white);
+    --secondary: var(--pft-muted-gold);
+    --secondary-foreground: var(--pft-black);
+    --muted: color-mix(in oklab, var(--pft-muted-gold) 45%, var(--pft-ivory));
+    --muted-foreground: color-mix(in oklab, var(--pft-black) 62%, var(--pft-ivory));
+    --accent: color-mix(in oklab, var(--pft-muted-gold) 60%, var(--pft-white));
+    --accent-foreground: var(--pft-black);
+    --brand: var(--pft-gold);
+    --brand-foreground: var(--pft-black);
+    --success: var(--pft-green);
+    --destructive: var(--pft-rose);
+    --border: var(--pft-muted-gold);
+    --input: var(--pft-muted-gold);
+    --ring: var(--pft-gold);
+    /* Chart-only shades: validated for colorblind separation on white */
+    --chart-income: #1A7A4C;
+    --chart-expense: #E67F8B;
+    --chart-category: #957541;
+    --chart-1: var(--pft-gold);
+    --chart-2: var(--pft-green);
+    --chart-3: var(--pft-rose);
+    --chart-4: var(--pft-black);
+    --chart-5: var(--pft-muted-gold);
+    --radius: 0.625rem;
+    --sidebar: var(--pft-white);
+    --sidebar-foreground: var(--pft-black);
+    --sidebar-primary: var(--pft-black);
+    --sidebar-primary-foreground: var(--pft-white);
+    --sidebar-accent: var(--pft-muted-gold);
+    --sidebar-accent-foreground: var(--pft-black);
+    --sidebar-border: var(--pft-muted-gold);
+    --sidebar-ring: var(--pft-gold);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
