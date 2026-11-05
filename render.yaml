@@ -1,0 +1,40 @@
+# Render blueprint: creates the Spend Journal API, its Postgres database and Redis in one go.
+# Render dashboard → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: spend-journal-api
+    runtime: node
+    plan: free
+    rootDir: "Personal Finance Tracker-Backend"
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spend-journal-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: spend-journal-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REFRESH_SECRET
+        generateValue: true
+      - key: JWT_SECRET_EXPIRATION
+        value: 2h
+      - key: REFRESH_SECRET_EXPIRATION
+        value: 7d
+
+  - type: keyvalue
+    name: spend-journal-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: spend-journal-db
+    plan: free
+    databaseName: spend_journal

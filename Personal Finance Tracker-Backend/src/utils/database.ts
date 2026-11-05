@@ -10,6 +10,9 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: "postgres",
+  // Hosted databases hand out a single connection string; it takes precedence over the DB_* values
+  url: process.env.DATABASE_URL,
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
