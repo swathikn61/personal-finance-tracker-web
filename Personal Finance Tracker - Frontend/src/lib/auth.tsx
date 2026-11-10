@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { api, setUnauthorizedHandler, tokens } from "@/lib/api"
+import { DEFAULT_CURRENCY, isSupportedCurrency } from "@/lib/currencies"
 
 const EMAIL_KEY = "pft_email"
 const NAME_KEY = "pft_name"
@@ -21,9 +22,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(tokens.access))
   const [email, setEmail] = useState(() => localStorage.getItem(EMAIL_KEY))
   const [name, setName] = useState(() => localStorage.getItem(NAME_KEY))
-  const [currency, setCurrencyState] = useState(() => localStorage.getItem(CURRENCY_KEY) ?? "INR")
+  const [currency, setCurrencyState] = useState(() => {
+    const stored = localStorage.getItem(CURRENCY_KEY)
+    return isSupportedCurrency(stored) ? stored : DEFAULT_CURRENCY
+  })
 
-  const applyCurrency = (code: string) => {
+  // Ignore missing or unknown codes, e.g. from an older API that doesn't send currency yet
+  const applyCurrency = (code: unknown) => {
+    if (!isSupportedCurrency(code)) return
     localStorage.setItem(CURRENCY_KEY, code)
     setCurrencyState(code)
   }
@@ -35,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(CURRENCY_KEY)
     setEmail(null)
     setName(null)
-    setCurrencyState("INR")
+    setCurrencyState(DEFAULT_CURRENCY)
     setIsAuthenticated(false)
   }
 

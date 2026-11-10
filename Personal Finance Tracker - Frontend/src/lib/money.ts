@@ -1,18 +1,8 @@
 import { useMemo } from "react"
 import { useAuth } from "@/lib/auth"
+import { CURRENCIES, DEFAULT_CURRENCY, isSupportedCurrency } from "@/lib/currencies"
 
-// Keep in sync with SUPPORTED_CURRENCIES in the backend AuthController
-export const CURRENCIES = [
-  { code: "INR", label: "Indian Rupee", locale: "en-IN" },
-  { code: "USD", label: "US Dollar", locale: "en-US" },
-  { code: "EUR", label: "Euro", locale: "de-DE" },
-  { code: "GBP", label: "British Pound", locale: "en-GB" },
-  { code: "JPY", label: "Japanese Yen", locale: "ja-JP" },
-  { code: "AUD", label: "Australian Dollar", locale: "en-AU" },
-  { code: "CAD", label: "Canadian Dollar", locale: "en-CA" },
-  { code: "SGD", label: "Singapore Dollar", locale: "en-SG" },
-  { code: "AED", label: "UAE Dirham", locale: "en-AE" },
-] as const
+export { CURRENCIES }
 
 export const currencySymbol = (code: string, locale = "en") =>
   new Intl.NumberFormat(locale, { style: "currency", currency: code, currencyDisplay: "narrowSymbol" })
@@ -21,7 +11,9 @@ export const currencySymbol = (code: string, locale = "en") =>
 
 // Formatters for the signed-in user's currency, using that currency's usual number grouping
 export function useMoney() {
-  const { currency } = useAuth()
+  const { currency: saved } = useAuth()
+  // Never let a bad value reach Intl.NumberFormat, which throws on unknown codes
+  const currency = isSupportedCurrency(saved) ? saved : DEFAULT_CURRENCY
   return useMemo(() => {
     const locale = CURRENCIES.find((c) => c.code === currency)?.locale ?? "en-US"
     const full = new Intl.NumberFormat(locale, { style: "currency", currency, currencyDisplay: "narrowSymbol" })
