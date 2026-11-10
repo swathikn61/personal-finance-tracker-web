@@ -100,7 +100,7 @@ export function HeroJournal() {
       </div>
 
       {/* sticky note */}
-      <div className="absolute top-0 -right-1 w-36 rotate-[7deg] animate-float rounded-sm bg-[#F2E2B0] p-3 text-[#3B3220] shadow-lg [animation-delay:-2s] sm:-right-8">
+      <div className="absolute top-0 -right-1 w-36 rotate-[7deg] animate-float rounded-sm bg-[var(--sj-silver)] p-3 text-[var(--sj-ink)] shadow-lg [animation-delay:-2s] sm:-right-8">
         <span className="absolute -top-2.5 left-1/2 h-5 w-14 -translate-x-1/2 -rotate-3 bg-white/60 shadow-sm" />
         <p className="font-hand text-2xl leading-tight">38% saved!</p>
         <p className="mt-0.5 font-hand text-base leading-tight opacity-70">keep it up ✓</p>
@@ -169,7 +169,7 @@ export function DashboardShowcase() {
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-hero p-3 text-hero-foreground">
-              <p className="text-[10px] text-brand">Total balance</p>
+              <p className="text-[10px] text-hero-accent">Total balance</p>
               <p className="mt-1 text-lg font-semibold tabular-nums">{money.format(48250)}</p>
             </div>
             <MiniStat label="Total income" value={money.format(126000)} tone="income" />

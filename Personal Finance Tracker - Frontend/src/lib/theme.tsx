@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
 
 export type ThemePreference = "light" | "dark" | "system"
 
@@ -38,8 +38,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const resolved = preference === "system" ? (systemDark ? "dark" : "light") : preference
 
+  const firstApply = useRef(true)
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", resolved === "dark")
+    const root = document.documentElement
+    // Fade colours on real theme changes, but not on first load
+    if (!firstApply.current) {
+      root.classList.add("theme-switching")
+      window.setTimeout(() => root.classList.remove("theme-switching"), 400)
+    }
+    firstApply.current = false
+    root.classList.toggle("dark", resolved === "dark")
   }, [resolved])
 
   const setPreference = (next: ThemePreference) => {

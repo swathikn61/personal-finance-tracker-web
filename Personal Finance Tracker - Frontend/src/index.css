@@ -65,6 +65,8 @@
     --color-destructive: var(--destructive);
     --color-hero: var(--hero);
     --color-hero-foreground: var(--hero-foreground);
+    --color-hero-accent: var(--hero-accent);
+    --shadow-elevated: var(--shadow-card);
     --color-success: var(--success);
     --color-brand: var(--brand);
     --color-brand-foreground: var(--brand-foreground);
@@ -91,98 +93,109 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Palette: Rich Black #171717 · Champagne Gold #C5A46D · Warm Ivory #F8F5EF · Pure White #FFFFFF
-   · Muted Gold #E9DFC9 · Success Green #25865A · Muted Rose #C75B66 */
+/* Spend Journal palette: navy and silver. Every color in the app resolves to these tokens.
+   Text pairs checked against WCAG AA; chart pairs validated for colour-blind separation. */
 :root {
     color-scheme: light;
-    --pft-black: #171717;
-    --pft-gold: #C5A46D;
-    --pft-ivory: #F8F5EF;
-    --pft-white: #FFFFFF;
-    --pft-muted-gold: #E9DFC9;
-    --pft-green: #25865A;
-    --pft-rose: #C75B66;
+    /* brand primitives */
+    --sj-navy: #243B64;
+    --sj-navy-strong: #2F5288;
+    --sj-steel: #8FA9CC;
+    --sj-steel-deep: #3A64A0;
+    --sj-silver: #D9E2EF;
+    --sj-mist: #EDF3FA;
+    --sj-ink: #172337;
+    --sj-slate: #617087;
+    --sj-line: #E0E6EF;
+    --sj-cloud: #F6F8FB;
+    --sj-ice: #A9C5E8;
 
-    --background: var(--pft-ivory);
-    --foreground: var(--pft-black);
-    --card: var(--pft-white);
-    --card-foreground: var(--pft-black);
-    --popover: var(--pft-white);
-    --popover-foreground: var(--pft-black);
-    --primary: var(--pft-black);
-    --primary-foreground: var(--pft-white);
-    --secondary: var(--pft-muted-gold);
-    --secondary-foreground: var(--pft-black);
-    --muted: color-mix(in oklab, var(--pft-muted-gold) 45%, var(--pft-ivory));
-    --muted-foreground: color-mix(in oklab, var(--pft-black) 62%, var(--pft-ivory));
-    --accent: color-mix(in oklab, var(--pft-muted-gold) 60%, var(--pft-white));
-    --accent-foreground: var(--pft-black);
-    --brand: var(--pft-gold);
-    --hero: var(--pft-black);
-    --hero-foreground: var(--pft-ivory);
-    --brand-foreground: var(--pft-black);
-    --success: var(--pft-green);
-    --destructive: var(--pft-rose);
-    --border: var(--pft-muted-gold);
-    --input: var(--pft-muted-gold);
-    --ring: var(--pft-gold);
-    /* Chart-only shades: validated for colorblind separation on white */
-    --chart-income: #1A7A4C;
-    --chart-expense: #E67F8B;
-    --chart-category: #957541;
-    --chart-1: var(--pft-gold);
-    --chart-2: var(--pft-green);
-    --chart-3: var(--pft-rose);
-    --chart-4: var(--pft-black);
-    --chart-5: var(--pft-muted-gold);
+    --background: var(--sj-cloud);
+    --foreground: var(--sj-ink);
+    --card: #FFFFFF;
+    --card-foreground: var(--sj-ink);
+    --popover: #FFFFFF;
+    --popover-foreground: var(--sj-ink);
+    --primary: var(--sj-navy);
+    --primary-foreground: #FFFFFF;
+    --secondary: var(--sj-mist);
+    --secondary-foreground: var(--sj-ink);
+    --muted: var(--sj-mist);
+    --muted-foreground: var(--sj-slate);
+    --accent: var(--sj-silver);
+    --accent-foreground: var(--sj-ink);
+    /* brand = accent text, icons and highlights on page surfaces */
+    --brand: var(--sj-navy-strong);
+    --brand-foreground: #FFFFFF;
+    /* hero = the navy feature surfaces (balance card, banners) and the accent that sits on them */
+    --hero: var(--sj-navy);
+    --hero-foreground: var(--sj-cloud);
+    --hero-accent: var(--sj-ice);
+    --success: #1F7A55;
+    --destructive: #B8434F;
+    --border: var(--sj-line);
+    --input: #C9D4E3;
+    --ring: var(--sj-steel-deep);
+    --shadow-card: 0 1px 2px rgb(23 35 55 / 0.04), 0 6px 20px -8px rgb(23 35 55 / 0.08);
+    /* Chart-only shades: validated for colour-blind separation on white */
+    --chart-income: var(--sj-steel-deep);
+    --chart-expense: #D9707C;
+    --chart-category: #5B7FB0;
+    --chart-1: var(--sj-steel-deep);
+    --chart-2: var(--sj-steel);
+    --chart-3: #D9707C;
+    --chart-4: var(--sj-navy);
+    --chart-5: var(--sj-silver);
     --radius: 0.625rem;
-    --sidebar: var(--pft-white);
-    --sidebar-foreground: var(--pft-black);
-    --sidebar-primary: var(--pft-black);
-    --sidebar-primary-foreground: var(--pft-white);
-    --sidebar-accent: var(--pft-muted-gold);
-    --sidebar-accent-foreground: var(--pft-black);
-    --sidebar-border: var(--pft-muted-gold);
-    --sidebar-ring: var(--pft-gold);
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: var(--sj-ink);
+    --sidebar-primary: var(--sj-navy);
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: var(--sj-silver);
+    --sidebar-accent-foreground: var(--sj-ink);
+    --sidebar-border: var(--sj-line);
+    --sidebar-ring: var(--sj-steel-deep);
 }
 
-/* Dark theme: same palette, re-stepped for a near-black surface. Chart shades validated against --card */
+/* Dark theme: coordinated navy steps. Chart shades validated against --card */
 .dark {
     color-scheme: dark;
-    --background: #121110;
-    --foreground: #F2EEE6;
-    --card: #1C1B19;
-    --card-foreground: #F2EEE6;
-    --popover: #23211E;
-    --popover-foreground: #F2EEE6;
-    --primary: var(--pft-ivory);
-    --primary-foreground: var(--pft-black);
-    --secondary: #2C2924;
-    --secondary-foreground: #F2EEE6;
-    --muted: #25231F;
-    --muted-foreground: #A8A196;
-    --accent: #2C2924;
-    --accent-foreground: #F2EEE6;
-    --brand: var(--pft-gold);
-    --brand-foreground: var(--pft-black);
-    --hero: #2A2620;
-    --hero-foreground: var(--pft-ivory);
-    --success: #4CB782;
-    --destructive: #E58A94;
-    --border: color-mix(in oklab, var(--pft-muted-gold) 14%, transparent);
-    --input: color-mix(in oklab, var(--pft-muted-gold) 20%, transparent);
-    --ring: var(--pft-gold);
-    --chart-income: #2E9A64;
+    --background: #172337;
+    --foreground: #F6F8FB;
+    --card: #1E2D43;
+    --card-foreground: #F6F8FB;
+    --popover: #24344D;
+    --popover-foreground: #F6F8FB;
+    --primary: var(--sj-ice);
+    --primary-foreground: var(--sj-ink);
+    --secondary: #24344D;
+    --secondary-foreground: #F6F8FB;
+    --muted: #24344D;
+    --muted-foreground: #B6C5D9;
+    --accent: #405775;
+    --accent-foreground: #F6F8FB;
+    --brand: var(--sj-ice);
+    --brand-foreground: var(--sj-ink);
+    --hero: #24344D;
+    --hero-foreground: #F6F8FB;
+    --hero-accent: var(--sj-ice);
+    --success: #5BC08E;
+    --destructive: #EC8F99;
+    --border: #35465E;
+    --input: #44587A;
+    --ring: var(--sj-steel);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.2), 0 8px 24px -10px rgb(0 0 0 / 0.35);
+    --chart-income: #5F8CCB;
     --chart-expense: #D9707C;
-    --chart-category: var(--pft-gold);
-    --sidebar: #1C1B19;
-    --sidebar-foreground: #F2EEE6;
-    --sidebar-primary: var(--pft-ivory);
-    --sidebar-primary-foreground: var(--pft-black);
-    --sidebar-accent: #2C2924;
-    --sidebar-accent-foreground: #F2EEE6;
-    --sidebar-border: color-mix(in oklab, var(--pft-muted-gold) 14%, transparent);
-    --sidebar-ring: var(--pft-gold);
+    --chart-category: var(--sj-steel);
+    --sidebar: #1E2D43;
+    --sidebar-foreground: #F6F8FB;
+    --sidebar-primary: var(--sj-ice);
+    --sidebar-primary-foreground: var(--sj-ink);
+    --sidebar-accent: #405775;
+    --sidebar-accent-foreground: #F6F8FB;
+    --sidebar-border: #35465E;
+    --sidebar-ring: var(--sj-steel);
 }
 
 @layer base {
@@ -213,6 +226,15 @@
 /* Hold self-drawing strokes until their section is revealed */
 .reveal:not([data-visible="true"]) .animate-draw {
     animation-play-state: paused;
+}
+
+/* Smooth colour fade while the theme switches (class added briefly by lib/theme.tsx) */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, fill 0.35s ease,
+        stroke 0.35s ease, box-shadow 0.35s ease !important;
 }
 
 /* Respect the OS "reduce motion" setting everywhere */

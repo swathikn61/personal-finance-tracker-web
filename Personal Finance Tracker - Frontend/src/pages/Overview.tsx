@@ -84,8 +84,8 @@ export function Overview() {
       {/* Headline numbers */}
       <section className="grid gap-4 lg:grid-cols-3">
         <div className="relative overflow-hidden rounded-xl bg-hero p-6 text-hero-foreground shadow-sm ring-1 ring-border">
-          <div className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-brand/20 blur-2xl" />
-          <p className="text-sm font-medium text-brand">Total balance</p>
+          <div className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-hero-accent/20 blur-2xl" />
+          <p className="text-sm font-medium text-hero-accent">Total balance</p>
           <p className="mt-2 text-4xl font-semibold tracking-tight tabular-nums md:text-5xl">
             {totals ? money.format(totals.balance) : "—"}
           </p>
@@ -101,7 +101,7 @@ export function Overview() {
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-hero-foreground/15">
               <div
-                className="h-full rounded-full bg-brand transition-[width] duration-500"
+                className="h-full rounded-full bg-hero-accent transition-[width] duration-500"
                 style={{ width: `${(savingsRate ?? 0) * 100}%` }}
               />
             </div>

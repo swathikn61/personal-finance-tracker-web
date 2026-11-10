@@ -59,7 +59,7 @@ const faqs = [
 function Accent({ children }: { children: ReactNode }) {
   return (
     <span className="relative inline-block whitespace-nowrap">
-      <span className="bg-gradient-to-r from-[#B08A4E] via-brand to-[#D9BE8C] bg-clip-text text-transparent">{children}</span>
+      <span className="bg-gradient-to-r from-primary via-brand to-[var(--chart-category)] bg-clip-text text-transparent">{children}</span>
       <svg viewBox="0 0 200 12" preserveAspectRatio="none" className="absolute -bottom-1 left-0 h-[0.18em] w-full text-brand" aria-hidden="true">
         <path
           d="M2 9 C 50 2, 110 2, 198 7"
@@ -103,7 +103,7 @@ export function Landing() {
       {showBanner && (
         <div className="relative bg-hero px-10 py-2 text-center text-xs text-hero-foreground">
           <Link to="/register" className="group inline-flex items-center gap-1.5">
-            <SparklesIcon className="size-3.5 text-brand" />
+            <SparklesIcon className="size-3.5 text-hero-accent" />
             New: receipt photos, dark mode and 9 display currencies
             <ArrowRightIcon className="size-3 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -147,7 +147,7 @@ export function Landing() {
         {/* Hero */}
         <section className="relative isolate">
           <div className="pointer-events-none absolute -top-32 right-[-10%] -z-10 size-[34rem] animate-drift rounded-full bg-brand/20 blur-3xl" />
-          <div className="pointer-events-none absolute top-40 left-[-15%] -z-10 size-[26rem] animate-drift rounded-full bg-success/10 blur-3xl [animation-delay:-8s]" />
+          <div className="pointer-events-none absolute top-40 left-[-15%] -z-10 size-[26rem] animate-drift rounded-full bg-[var(--sj-steel)]/25 blur-3xl [animation-delay:-8s]" />
           <div
             className="pointer-events-none absolute inset-0 -z-10 opacity-[0.35] [background-image:radial-gradient(var(--border)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]"
             aria-hidden="true"
@@ -302,18 +302,18 @@ export function Landing() {
         {/* Closing CTA */}
         <section className="mx-auto max-w-6xl px-4 pb-24 md:px-8">
           <Reveal className="relative isolate overflow-hidden rounded-[2rem] bg-hero px-6 py-14 text-hero-foreground md:px-14 md:py-16">
-            <div className="pointer-events-none absolute -right-20 -bottom-24 -z-10 size-96 animate-drift rounded-full bg-brand/25 blur-3xl" />
-            <Sparkle className="absolute top-8 right-10 size-16 animate-float text-brand md:size-24" />
-            <Sparkle className="absolute top-28 right-32 size-8 animate-float text-brand/70 [animation-delay:-3s] md:right-40 md:size-12" />
+            <div className="pointer-events-none absolute -right-20 -bottom-24 -z-10 size-96 animate-drift rounded-full bg-hero-accent/25 blur-3xl" />
+            <Sparkle className="absolute top-8 right-10 size-16 animate-float text-hero-accent md:size-24" />
+            <Sparkle className="absolute top-28 right-32 size-8 animate-float text-hero-accent/70 [animation-delay:-3s] md:right-40 md:size-12" />
             <div className="relative max-w-xl">
               <h2 className="text-4xl leading-tight font-semibold tracking-tight text-balance md:text-5xl">
-                Start your spend journal <span className="text-brand">today.</span>
+                Start your spend journal <span className="text-hero-accent">today.</span>
               </h2>
               <p className="mt-4 text-hero-foreground/70">Free, quick to set up, and ready on your phone and laptop.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button
                   size="lg"
-                  className="group h-12 rounded-full bg-brand px-7 text-brand-foreground hover:bg-brand/90"
+                  className="group h-12 rounded-full bg-hero-accent px-7 text-hero hover:bg-hero-accent/90"
                   nativeButton={false}
                   render={<Link to="/register" />}
                 >
