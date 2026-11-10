@@ -7,14 +7,17 @@ import {
   ArrowUpRightIcon,
   PiggyBankIcon,
   PlusIcon,
+  PaperclipIcon,
 } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type TooltipContentProps } from "recharts"
 import { EntryFormDialog } from "@/components/EntryFormDialog"
+import { ReceiptViewer } from "@/components/ReceiptViewer"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { api, type Entry, type EntryInput, type Insights, type Totals } from "@/lib/api"
 import { useAuth } from "@/lib/auth"
-import { compactCurrency, currency, formatDate, formatMonth } from "@/lib/format"
+import { formatDate, formatMonth } from "@/lib/format"
+import { useMoney } from "@/lib/money"
 import { cn } from "@/lib/utils"
 
 const greeting = () => {
@@ -24,10 +27,12 @@ const greeting = () => {
 
 export function Overview() {
   const { name } = useAuth()
+  const money = useMoney()
   const [totals, setTotals] = useState<Totals | null>(null)
   const [insights, setInsights] = useState<Insights | null>(null)
   const [recent, setRecent] = useState<Entry[] | null>(null)
   const [formOpen, setFormOpen] = useState(false)
+  const [viewingReceipt, setViewingReceipt] = useState<Entry | null>(null)
 
   const load = useCallback(async () => {
     try {
@@ -49,9 +54,9 @@ export function Overview() {
   }, [load])
 
   const handleCreate = async (values: EntryInput) => {
-    await api.createEntry(values)
+    const { entry } = await api.createEntry(values)
     toast.success("Entry added")
-    await load()
+    return entry.id
   }
 
   const thisMonth = insights?.monthly.at(-1)
@@ -78,23 +83,23 @@ export function Overview() {
 
       {/* Headline numbers */}
       <section className="grid gap-4 lg:grid-cols-3">
-        <div className="relative overflow-hidden rounded-xl bg-primary p-6 text-primary-foreground shadow-sm">
+        <div className="relative overflow-hidden rounded-xl bg-hero p-6 text-hero-foreground shadow-sm ring-1 ring-border">
           <div className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-brand/20 blur-2xl" />
           <p className="text-sm font-medium text-brand">Total balance</p>
           <p className="mt-2 text-4xl font-semibold tracking-tight tabular-nums md:text-5xl">
-            {totals ? currency.format(totals.balance) : "—"}
+            {totals ? money.format(totals.balance) : "—"}
           </p>
           <div className="mt-6">
-            <div className="flex items-center justify-between text-xs text-primary-foreground/70">
+            <div className="flex items-center justify-between text-xs text-hero-foreground/70">
               <span className="inline-flex items-center gap-1.5">
                 <PiggyBankIcon className="size-3.5" />
                 Savings rate
               </span>
-              <span className="font-medium text-primary-foreground tabular-nums">
+              <span className="font-medium text-hero-foreground tabular-nums">
                 {savingsRate === null ? "—" : `${Math.round(savingsRate * 100)}%`}
               </span>
             </div>
-            <div className="mt-2 h-1.5 rounded-full bg-primary-foreground/15">
+            <div className="mt-2 h-1.5 rounded-full bg-hero-foreground/15">
               <div
                 className="h-full rounded-full bg-brand transition-[width] duration-500"
                 style={{ width: `${(savingsRate ?? 0) * 100}%` }}
@@ -184,7 +189,21 @@ export function Overview() {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{entry.description}</p>
+                    <p className="flex items-center gap-1 text-sm font-medium">
+                      <span className="truncate">{entry.description}</span>
+                      {entry.hasReceipt && (
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          aria-label="View receipt"
+                          title="View receipt"
+                          className="text-muted-foreground"
+                          onClick={() => setViewingReceipt(entry)}
+                        >
+                          <PaperclipIcon />
+                        </Button>
+                      )}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {entry.category} · {formatDate(entry.date)}
                     </p>
@@ -196,7 +215,7 @@ export function Overview() {
                     )}
                   >
                     {entry.type === "income" ? "+" : "−"}
-                    {currency.format(Number(entry.amount))}
+                    {money.format(Number(entry.amount))}
                   </span>
                 </li>
               ))}
@@ -205,7 +224,8 @@ export function Overview() {
         </CardContent>
       </Card>
 
-      <EntryFormDialog open={formOpen} onOpenChange={setFormOpen} entry={null} onSubmit={handleCreate} />
+      <EntryFormDialog open={formOpen} onOpenChange={setFormOpen} entry={null} onSubmit={handleCreate} onSaved={load} />
+      <ReceiptViewer entry={viewingReceipt} onClose={() => setViewingReceipt(null)} />
     </div>
   )
 }
@@ -223,6 +243,7 @@ function StatTile({
   icon: React.ReactNode
   tone: "income" | "expense"
 }) {
+  const money = useMoney()
   return (
     <Card>
       <CardHeader>
@@ -238,14 +259,14 @@ function StatTile({
           </div>
         </CardAction>
         <CardTitle className="text-3xl font-semibold tracking-tight tabular-nums">
-          {value === undefined ? "—" : currency.format(value)}
+          {value === undefined ? "—" : money.format(value)}
         </CardTitle>
       </CardHeader>
       <CardContent className="mt-auto">
         <p className="text-xs text-muted-foreground">
           This month{" "}
           <span className="font-medium text-foreground tabular-nums">
-            {monthValue === undefined ? "—" : currency.format(monthValue)}
+            {monthValue === undefined ? "—" : money.format(monthValue)}
           </span>
         </p>
       </CardContent>
@@ -263,6 +284,7 @@ function LegendItem({ color, label }: { color: string; label: string }) {
 }
 
 function CashFlowTooltip({ active, payload, label }: TooltipContentProps) {
+  const money = useMoney()
   if (!active || !payload?.length) return null
   const income = Number(payload.find((p) => p.dataKey === "income")?.value ?? 0)
   const expense = Number(payload.find((p) => p.dataKey === "expense")?.value ?? 0)
@@ -271,11 +293,11 @@ function CashFlowTooltip({ active, payload, label }: TooltipContentProps) {
     <div className="min-w-44 rounded-lg border bg-popover p-3 text-xs shadow-md">
       <p className="mb-2 font-medium text-foreground">{formatMonth(String(label))}</p>
       <div className="grid gap-1.5">
-        <TooltipRow color="var(--chart-income)" label="Income" value={currency.format(income)} />
-        <TooltipRow color="var(--chart-expense)" label="Expense" value={currency.format(expense)} />
+        <TooltipRow color="var(--chart-income)" label="Income" value={money.format(income)} />
+        <TooltipRow color="var(--chart-expense)" label="Expense" value={money.format(expense)} />
         <div className="mt-1 flex justify-between border-t pt-1.5">
           <span className="text-muted-foreground">Net</span>
-          <span className="font-medium text-foreground tabular-nums">{currency.format(net)}</span>
+          <span className="font-medium text-foreground tabular-nums">{money.format(net)}</span>
         </div>
       </div>
     </div>
@@ -295,6 +317,7 @@ function TooltipRow({ color, label, value }: { color: string; label: string; val
 }
 
 function CashFlowChart({ data }: { data?: Insights["monthly"] }) {
+  const money = useMoney()
   if (!data) return <div className="h-64 animate-pulse rounded-lg bg-muted" />
   if (data.every((d) => d.income === 0 && d.expense === 0)) {
     return (
@@ -318,13 +341,13 @@ function CashFlowChart({ data }: { data?: Insights["monthly"] }) {
             minTickGap={8}
           />
           <YAxis
-            tickFormatter={(v: number) => compactCurrency.format(v)}
+            tickFormatter={(v: number) => money.formatCompact(v)}
             tickLine={false}
             axisLine={false}
             width={56}
             tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
           />
-          <Tooltip content={CashFlowTooltip} cursor={{ fill: "var(--muted)" }} />
+          <Tooltip content={(props) => <CashFlowTooltip {...props} />} cursor={{ fill: "var(--muted)" }} />
           <Bar dataKey="income" name="Income" fill="var(--chart-income)" radius={[4, 4, 0, 0]} maxBarSize={16} />
           <Bar dataKey="expense" name="Expense" fill="var(--chart-expense)" radius={[4, 4, 0, 0]} maxBarSize={16} />
         </BarChart>
@@ -336,6 +359,7 @@ function CashFlowChart({ data }: { data?: Insights["monthly"] }) {
 const MAX_CATEGORIES = 5
 
 function CategoryBars({ data }: { data?: Insights["categories"] }) {
+  const money = useMoney()
   if (!data) return <div className="h-64 animate-pulse rounded-lg bg-muted" />
   if (data.length === 0) {
     return (
@@ -353,11 +377,11 @@ function CategoryBars({ data }: { data?: Insights["categories"] }) {
   return (
     <ul className="grid gap-4">
       {rows.map((row) => (
-        <li key={row.category} title={`${row.category}: ${currency.format(row.total)}`}>
+        <li key={row.category} title={`${row.category}: ${money.format(row.total)}`}>
           <div className="flex items-baseline justify-between gap-3 text-sm">
             <span className="truncate font-medium">{row.category}</span>
             <span className="shrink-0 tabular-nums">
-              {currency.format(row.total)}
+              {money.format(row.total)}
               <span className="ml-1.5 text-xs text-muted-foreground">{Math.round((row.total / total) * 100)}%</span>
             </span>
           </div>

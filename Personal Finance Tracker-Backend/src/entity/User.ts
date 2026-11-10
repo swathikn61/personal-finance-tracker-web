@@ -20,5 +20,9 @@ export class User {
 
   @Column({ nullable: true })
   refreshToken!: string;
-  
+
+  // ISO 4217 code used only for display formatting; amounts are never converted
+  @Column({ length: 3, default: "INR" })
+  currency!: string;
+
 }

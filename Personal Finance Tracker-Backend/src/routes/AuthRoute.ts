@@ -25,5 +25,6 @@ router.post("/register", registerLimiter,AuthContoller.register);
 router.post("/login",loginlimiter,AuthContoller.login);
 router.post("/refresh",AuthContoller.refreshToken)
 router.get("/me",authMiddleware,AuthContoller.me)
+router.patch("/me",authMiddleware,AuthContoller.updateMe)
 
 export default router;

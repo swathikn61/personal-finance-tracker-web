@@ -14,9 +14,10 @@ export interface Entry {
   category: string
   description: string
   date: string
+  hasReceipt?: boolean
 }
 
-export type EntryInput = Omit<Entry, "id">
+export type EntryInput = Omit<Entry, "id" | "hasReceipt">
 
 export interface EntriesPage {
   currentPage: number
@@ -41,6 +42,13 @@ export interface Totals {
   totalIncome: number
   totalExpense: number
   balance: number
+}
+
+export interface UserProfile {
+  id: number
+  name: string
+  email: string
+  currency: string
 }
 
 export interface Insights {
@@ -114,7 +122,7 @@ async function refreshAccessToken(): Promise<boolean> {
 
 async function request(path: string, init: RequestInit = {}, retry = true): Promise<Response> {
   const headers = new Headers(init.headers)
-  if (init.body) headers.set("Content-Type", "application/json")
+  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json")
   if (tokens.access) headers.set("Authorization", `Bearer ${tokens.access}`)
 
   const res = await fetch(`${BASE_URL}${path}`, { ...init, headers })
@@ -154,7 +162,29 @@ export const api = {
   },
 
   me() {
-    return json<{ id: number; name: string; email: string }>("/auth/me")
+    return json<UserProfile>("/auth/me")
+  },
+
+  updateMe(changes: { currency: string }) {
+    return json<UserProfile>("/auth/me", { method: "PATCH", body: JSON.stringify(changes) })
+  },
+
+  uploadReceipt(entryId: number, image: Blob) {
+    return json<{ message: string }>(`/entries/${entryId}/receipt`, {
+      method: "PUT",
+      headers: { "Content-Type": image.type },
+      body: image,
+    })
+  },
+
+  // Returns an object URL for the receipt image; the caller revokes it when done
+  async getReceiptUrl(entryId: number) {
+    const res = await request(`/entries/${entryId}/receipt`)
+    return URL.createObjectURL(await res.blob())
+  },
+
+  deleteReceipt(entryId: number) {
+    return json<{ message: string }>(`/entries/${entryId}/receipt`, { method: "DELETE" })
   },
 
   register(name: string, email: string, password: string) {

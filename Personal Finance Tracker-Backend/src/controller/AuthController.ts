@@ -9,6 +9,8 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET as string;
 const JWT_EXPIRES_IN = process.env.JWT_SECRET_EXPIRATION as string;
 const REFRESH_EXPIRES_IN = process.env.REFRESH_SECRET_EXPIRATION as string;
 
+const SUPPORTED_CURRENCIES = ["INR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "SGD", "AED"];
+
 
 export class AuthContoller{
     static async register(req:Request,res:Response){
@@ -99,9 +101,32 @@ export class AuthContoller{
             if(!user){
                 return res.status(404).json({message:"User not found"});
             }
-            return res.status(200).json({id:user.id,name:user.name,email:user.email});
+            return res.status(200).json({id:user.id,name:user.name,email:user.email,currency:user.currency});
         }catch(error){
             return res.status(500).json({message:"Failed to fetch user"});
+        }
+    }
+
+    static async updateMe(req:Request,res:Response){
+        try{
+            const userId=(req as any).user.userId;
+            const {currency}=req.body;
+
+            if(!SUPPORTED_CURRENCIES.includes(currency)){
+                return res.status(400).json({message:"Unsupported currency"});
+            }
+
+            const userRepository=AppDataSource.getRepository(User);
+            const user=await userRepository.findOneBy({id:userId});
+            if(!user){
+                return res.status(404).json({message:"User not found"});
+            }
+
+            user.currency=currency;
+            await userRepository.save(user);
+            return res.status(200).json({id:user.id,name:user.name,email:user.email,currency:user.currency});
+        }catch(error){
+            return res.status(500).json({message:"Failed to update user"});
         }
     }
     }

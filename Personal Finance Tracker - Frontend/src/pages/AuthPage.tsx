@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { Logo } from "@/components/Logo"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -40,7 +41,8 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-8 bg-background p-4">
+    <div className="relative flex min-h-svh flex-col items-center justify-center gap-8 bg-background p-4">
+      <ThemeToggle className="absolute top-4 right-4" />
       <Logo size="lg" />
       <Card className="w-full max-w-sm">
         <CardHeader>

@@ -27,6 +27,9 @@ export class Entries {
   @Column({ type: "date" })
   date!: string;
 
+  @Column({ default: false })
+  hasReceipt!: boolean;
+
   @ManyToOne(() => User, (user) => user.entries, { eager: false })
   @JoinColumn({ name: "userId" })
   user!: User;

@@ -5,7 +5,7 @@ import { redisClient } from "../config/redis";
 import logger from "../utils/logger";
 
 // Part of every list cache key, so bumping it invalidates all of a user's cached lists at once
-const entriesVersionKey=(userId:number)=>`entries:version:${userId}`;
+export const entriesVersionKey=(userId:number)=>`entries:version:${userId}`;
 
 export class EntriesController {
 

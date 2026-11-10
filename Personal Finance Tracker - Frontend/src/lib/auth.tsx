@@ -3,11 +3,14 @@ import { api, setUnauthorizedHandler, tokens } from "@/lib/api"
 
 const EMAIL_KEY = "pft_email"
 const NAME_KEY = "pft_name"
+const CURRENCY_KEY = "pft_currency"
 
 interface AuthContextValue {
   isAuthenticated: boolean
   email: string | null
   name: string | null
+  currency: string
+  setCurrency: (currency: string) => Promise<void>
   login: (email: string, password: string) => Promise<void>
   logout: () => void
 }
@@ -18,13 +21,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(tokens.access))
   const [email, setEmail] = useState(() => localStorage.getItem(EMAIL_KEY))
   const [name, setName] = useState(() => localStorage.getItem(NAME_KEY))
+  const [currency, setCurrencyState] = useState(() => localStorage.getItem(CURRENCY_KEY) ?? "INR")
+
+  const applyCurrency = (code: string) => {
+    localStorage.setItem(CURRENCY_KEY, code)
+    setCurrencyState(code)
+  }
 
   const logout = () => {
     tokens.clear()
     localStorage.removeItem(EMAIL_KEY)
     localStorage.removeItem(NAME_KEY)
+    localStorage.removeItem(CURRENCY_KEY)
     setEmail(null)
     setName(null)
+    setCurrencyState("INR")
     setIsAuthenticated(false)
   }
 
@@ -42,9 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(EMAIL_KEY, user.email)
         setName(user.name)
         setEmail(user.email)
+        applyCurrency(user.currency)
       })
       .catch(() => {})
   }, [isAuthenticated])
+
+  const setCurrency = async (code: string) => {
+    const user = await api.updateMe({ currency: code })
+    applyCurrency(user.currency)
+  }
 
   const login = async (email: string, password: string) => {
     await api.login(email, password)
@@ -54,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, email, name, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, email, name, currency, setCurrency, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

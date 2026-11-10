@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom"
-import { LayoutDashboardIcon, LogOutIcon, ReceiptTextIcon } from "lucide-react"
+import { LayoutDashboardIcon, LogOutIcon, ReceiptTextIcon, SettingsIcon } from "lucide-react"
 import { Logo } from "@/components/Logo"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils"
 const navItems = [
   { to: "/", label: "Overview", icon: LayoutDashboardIcon, end: true },
   { to: "/transactions", label: "Transactions", icon: ReceiptTextIcon, end: false },
+  { to: "/settings", label: "Settings", icon: SettingsIcon, end: false },
 ]
 
 function Brand() {
@@ -22,7 +24,10 @@ export function AppLayout() {
     <div className="min-h-svh bg-background md:grid md:grid-cols-[240px_1fr]">
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-svh flex-col border-r bg-card px-4 py-5 md:flex">
-        <Brand />
+        <div className="flex items-center justify-between gap-2">
+          <Brand />
+          <ThemeToggle />
+        </div>
         <nav className="mt-8 grid gap-1">
           {navItems.map(({ to, label, icon: Icon, end }) => (
             <NavLink
@@ -64,9 +69,12 @@ export function AppLayout() {
       <header className="sticky top-0 z-10 border-b bg-card md:hidden">
         <div className="flex h-14 items-center justify-between px-4">
           <Brand />
-          <Button variant="ghost" size="icon-sm" aria-label="Logout" onClick={logout}>
-            <LogOutIcon />
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button variant="ghost" size="icon-sm" aria-label="Logout" onClick={logout}>
+              <LogOutIcon />
+            </Button>
+          </div>
         </div>
         <nav className="flex gap-1 px-4 pb-2">
           {navItems.map(({ to, label, icon: Icon, end }) => (

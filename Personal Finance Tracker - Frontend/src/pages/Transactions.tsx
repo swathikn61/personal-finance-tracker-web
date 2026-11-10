@@ -8,8 +8,10 @@ import {
   PencilIcon,
   PlusIcon,
   Trash2Icon,
+  PaperclipIcon,
 } from "lucide-react"
 import { EntryFormDialog, typeItems } from "@/components/EntryFormDialog"
+import { ReceiptViewer } from "@/components/ReceiptViewer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,7 +28,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { api, type Entry, type EntriesPage, type EntriesQuery, type EntryInput } from "@/lib/api"
-import { currency, formatDate } from "@/lib/format"
+import { formatDate } from "@/lib/format"
+import { useMoney } from "@/lib/money"
 import { cn } from "@/lib/utils"
 
 const PAGE_SIZE = 10
@@ -45,6 +48,7 @@ const emptyFilters: Filters = { type: "all", category: "", startDate: "", endDat
 type SortField = NonNullable<EntriesQuery["sortBy"]>
 
 export function Transactions() {
+  const money = useMoney()
   const [data, setData] = useState<EntriesPage | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -57,6 +61,7 @@ export function Transactions() {
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Entry | null>(null)
   const [deleting, setDeleting] = useState<Entry | null>(null)
+  const [viewingReceipt, setViewingReceipt] = useState<Entry | null>(null)
   const [exporting, setExporting] = useState(false)
 
   const loadEntries = useCallback(async () => {
@@ -115,11 +120,11 @@ export function Transactions() {
     if (editing) {
       await api.updateEntry(editing.id, values)
       toast.success("Entry updated")
-    } else {
-      await api.createEntry(values)
-      toast.success("Entry added")
+      return editing.id
     }
-    await loadEntries()
+    const { entry } = await api.createEntry(values)
+    toast.success("Entry added")
+    return entry.id
   }
 
   const confirmDelete = async () => {
@@ -288,7 +293,21 @@ export function Transactions() {
                     data.entries.map((entry) => (
                       <TableRow key={entry.id} className={cn(loading && "opacity-60")}>
                         <TableCell className="whitespace-nowrap">{formatDate(entry.date)}</TableCell>
-                        <TableCell className="max-w-64 truncate">{entry.description}</TableCell>
+                        <TableCell className="max-w-64 truncate">
+                          {entry.description}
+                          {entry.hasReceipt && (
+                            <Button
+                            variant="ghost"
+                            size="icon-xs"
+                            aria-label="View receipt"
+                            title="View receipt"
+                            className="ml-1 align-middle text-muted-foreground"
+                            onClick={() => setViewingReceipt(entry)}
+                          >
+                            <PaperclipIcon />
+                          </Button>
+                          )}
+                        </TableCell>
                         <TableCell>{entry.category}</TableCell>
                         <TableCell>
                           <Badge
@@ -310,7 +329,7 @@ export function Transactions() {
                           )}
                         >
                           {entry.type === "income" ? "+" : "−"}
-                          {currency.format(Number(entry.amount))}
+                          {money.format(Number(entry.amount))}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button
@@ -364,14 +383,15 @@ export function Transactions() {
           </CardContent>
         </Card>
 
-      <EntryFormDialog open={formOpen} onOpenChange={setFormOpen} entry={editing} onSubmit={handleSave} />
+      <EntryFormDialog open={formOpen} onOpenChange={setFormOpen} entry={editing} onSubmit={handleSave} onSaved={loadEntries} />
+      <ReceiptViewer entry={viewingReceipt} onClose={() => setViewingReceipt(null)} />
 
       <Dialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Delete entry?</DialogTitle>
             <DialogDescription>
-              {deleting && `"${deleting.description}" (${currency.format(Number(deleting.amount))}) will be permanently removed.`}
+              {deleting && `"${deleting.description}" (${money.format(Number(deleting.amount))}) will be permanently removed.`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

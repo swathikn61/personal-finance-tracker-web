@@ -25,6 +25,8 @@
     --color-input: var(--input);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
+    --color-hero: var(--hero);
+    --color-hero-foreground: var(--hero-foreground);
     --color-success: var(--success);
     --color-brand: var(--brand);
     --color-brand-foreground: var(--brand-foreground);
@@ -78,6 +80,8 @@
     --accent: color-mix(in oklab, var(--pft-muted-gold) 60%, var(--pft-white));
     --accent-foreground: var(--pft-black);
     --brand: var(--pft-gold);
+    --hero: var(--pft-black);
+    --hero-foreground: var(--pft-ivory);
     --brand-foreground: var(--pft-black);
     --success: var(--pft-green);
     --destructive: var(--pft-rose);
@@ -101,6 +105,45 @@
     --sidebar-accent: var(--pft-muted-gold);
     --sidebar-accent-foreground: var(--pft-black);
     --sidebar-border: var(--pft-muted-gold);
+    --sidebar-ring: var(--pft-gold);
+}
+
+/* Dark theme: same palette, re-stepped for a near-black surface. Chart shades validated against --card */
+.dark {
+    color-scheme: dark;
+    --background: #121110;
+    --foreground: #F2EEE6;
+    --card: #1C1B19;
+    --card-foreground: #F2EEE6;
+    --popover: #23211E;
+    --popover-foreground: #F2EEE6;
+    --primary: var(--pft-ivory);
+    --primary-foreground: var(--pft-black);
+    --secondary: #2C2924;
+    --secondary-foreground: #F2EEE6;
+    --muted: #25231F;
+    --muted-foreground: #A8A196;
+    --accent: #2C2924;
+    --accent-foreground: #F2EEE6;
+    --brand: var(--pft-gold);
+    --brand-foreground: var(--pft-black);
+    --hero: #2A2620;
+    --hero-foreground: var(--pft-ivory);
+    --success: #4CB782;
+    --destructive: #E58A94;
+    --border: color-mix(in oklab, var(--pft-muted-gold) 14%, transparent);
+    --input: color-mix(in oklab, var(--pft-muted-gold) 20%, transparent);
+    --ring: var(--pft-gold);
+    --chart-income: #2E9A64;
+    --chart-expense: #D9707C;
+    --chart-category: var(--pft-gold);
+    --sidebar: #1C1B19;
+    --sidebar-foreground: #F2EEE6;
+    --sidebar-primary: var(--pft-ivory);
+    --sidebar-primary-foreground: var(--pft-black);
+    --sidebar-accent: #2C2924;
+    --sidebar-accent-foreground: #F2EEE6;
+    --sidebar-border: color-mix(in oklab, var(--pft-muted-gold) 14%, transparent);
     --sidebar-ring: var(--pft-gold);
 }
 
