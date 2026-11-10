@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { to: "/", label: "Overview", icon: LayoutDashboardIcon, end: true },
+  { to: "/dashboard", label: "Overview", icon: LayoutDashboardIcon, end: true },
   { to: "/transactions", label: "Transactions", icon: ReceiptTextIcon, end: false },
   { to: "/settings", label: "Settings", icon: SettingsIcon, end: false },
 ]

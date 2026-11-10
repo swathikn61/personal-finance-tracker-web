@@ -27,7 +27,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     try {
       if (isLogin) {
         await login(email, password)
-        navigate("/")
+        navigate("/dashboard")
       } else {
         await api.register(name, email, password)
         toast.success("Account created. Please sign in.")
@@ -43,7 +43,9 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   return (
     <div className="relative flex min-h-svh flex-col items-center justify-center gap-8 bg-background p-4">
       <ThemeToggle className="absolute top-4 right-4" />
-      <Logo size="lg" />
+      <Link to="/" aria-label="Back to Spend Journal home">
+        <Logo size="lg" />
+      </Link>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">{isLogin ? "Welcome back" : "Create an account"}</CardTitle>

@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/AppLayout"
 import { AuthProvider, useAuth } from "@/lib/auth"
 import { ThemeProvider, useTheme } from "@/lib/theme"
 import { AuthPage } from "@/pages/AuthPage"
+import { Landing } from "@/pages/Landing"
 import { Overview } from "@/pages/Overview"
 import { Settings } from "@/pages/Settings"
 import { Transactions } from "@/pages/Transactions"
@@ -16,7 +17,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
 function GuestOnly({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
-  return isAuthenticated ? <Navigate to="/" replace /> : children
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children
 }
 
 function ThemedToaster() {
@@ -31,10 +32,11 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
-              <Route path="/" element={<Overview />} />
+              <Route path="/dashboard" element={<Overview />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
+            <Route path="/" element={<GuestOnly><Landing /></GuestOnly>} />
             <Route path="/login" element={<GuestOnly><AuthPage key="login" mode="login" /></GuestOnly>} />
             <Route path="/register" element={<GuestOnly><AuthPage key="register" mode="register" /></GuestOnly>} />
             <Route path="*" element={<Navigate to="/" replace />} />
