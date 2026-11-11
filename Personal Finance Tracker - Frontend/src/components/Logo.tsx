@@ -8,7 +8,7 @@ export function LogoMark({ className }: { className?: string }) {
         <path d="M22.5 8A14.25 14.25 0 0 0 22.5 36.5A14.25 14.25 0 0 1 22.5 65" />
         <path d="M79.5 8.5V50.5A14.5 14.5 0 0 1 50.5 50.5" />
       </g>
-      <circle cx="62.5" cy="18.5" r="8" fill="var(--sj-steel)" />
+      <circle cx="62.5" cy="18.5" r="8" fill="var(--brand-soft)" />
     </svg>
   )
 }

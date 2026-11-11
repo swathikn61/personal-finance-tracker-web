@@ -3,14 +3,12 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/plus-jakarta-sans";
 @import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource/caveat/latin-600.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
     --font-heading: 'Bricolage Grotesque Variable', 'Plus Jakarta Sans Variable', sans-serif;
     --font-sans: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
-    --font-hand: 'Caveat', cursive;
     --animate-fade-up: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     --animate-float: float 7s ease-in-out infinite;
     --animate-marquee: marquee 38s linear infinite;
@@ -18,6 +16,11 @@
     --animate-drift: drift 16s ease-in-out infinite alternate;
     --animate-grow-y: grow-y 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     --animate-pop: pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+    --animate-orbit: orbit 48s linear infinite;
+    --animate-orbit-reverse: orbit 48s linear infinite reverse;
+    --animate-grow-x: grow-x 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    --animate-curtain: curtain 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.9s both;
+    --animate-scroll-cue: scroll-cue 2s ease-in-out infinite;
 
     @keyframes fade-up {
         from { opacity: 0; transform: translateY(22px); }
@@ -41,6 +44,22 @@
     @keyframes grow-y {
         from { transform: scaleY(0); }
         to { transform: scaleY(1); }
+    }
+    @keyframes grow-x {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+    @keyframes curtain {
+        to { transform: translateY(-100%); }
+    }
+    @keyframes scroll-cue {
+        0% { transform: scaleY(0); transform-origin: top; }
+        50% { transform: scaleY(1); transform-origin: top; }
+        51% { transform: scaleY(1); transform-origin: bottom; }
+        100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+    @keyframes orbit {
+        to { transform: rotate(360deg); }
     }
     @keyframes pop {
         from { opacity: 0; transform: translateY(8px) scale(0.92); }
@@ -93,109 +112,111 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Spend Journal palette: navy and silver. Every color in the app resolves to these tokens.
-   Text pairs checked against WCAG AA; chart pairs validated for colour-blind separation. */
+/* Spend Journal palette: "Frozen lake" (snow, icy blue, slate, navy) with crisp ink text.
+   Every color in the app resolves to these tokens. Text pairs checked against WCAG AA;
+   chart pairs validated for colour-blind separation. */
 :root {
     color-scheme: light;
-    /* brand primitives */
-    --sj-navy: #243B64;
-    --sj-navy-strong: #2F5288;
-    --sj-steel: #8FA9CC;
-    --sj-steel-deep: #3A64A0;
-    --sj-silver: #D9E2EF;
-    --sj-mist: #EDF3FA;
-    --sj-ink: #172337;
-    --sj-slate: #617087;
-    --sj-line: #E0E6EF;
-    --sj-cloud: #F6F8FB;
-    --sj-ice: #A9C5E8;
+    /* palette primitives */
+    --fl-snow: #FFFAFA;
+    --fl-ice: #ADD8E6;
+    --fl-slate: #6D8196;
+    --fl-slate-deep: #56697E;
+    --fl-navy: #000080;
+    --fl-ink: #0E1022;
+    --fl-frost: #EEF6F9;
+    --fl-mist: #E3F0F6;
+    --fl-line: #E2EAEF;
 
-    --background: var(--sj-cloud);
-    --foreground: var(--sj-ink);
+    --background: var(--fl-snow);
+    --foreground: var(--fl-ink);
     --card: #FFFFFF;
-    --card-foreground: var(--sj-ink);
+    --card-foreground: var(--fl-ink);
     --popover: #FFFFFF;
-    --popover-foreground: var(--sj-ink);
-    --primary: var(--sj-navy);
+    --popover-foreground: var(--fl-ink);
+    --primary: var(--fl-navy);
     --primary-foreground: #FFFFFF;
-    --secondary: var(--sj-mist);
-    --secondary-foreground: var(--sj-ink);
-    --muted: var(--sj-mist);
-    --muted-foreground: var(--sj-slate);
-    --accent: var(--sj-silver);
-    --accent-foreground: var(--sj-ink);
+    --secondary: var(--fl-frost);
+    --secondary-foreground: var(--fl-ink);
+    --muted: var(--fl-frost);
+    --muted-foreground: var(--fl-slate-deep);
+    --accent: var(--fl-mist);
+    --accent-foreground: var(--fl-ink);
     /* brand = accent text, icons and highlights on page surfaces */
-    --brand: var(--sj-navy-strong);
+    --brand: var(--fl-navy);
     --brand-foreground: #FFFFFF;
+    /* brand-soft = decorative only (logo dot, glows, light chart segments); never body text */
+    --brand-soft: var(--fl-slate);
     /* hero = the navy feature surfaces (balance card, banners) and the accent that sits on them */
-    --hero: var(--sj-navy);
-    --hero-foreground: var(--sj-cloud);
-    --hero-accent: var(--sj-ice);
-    --success: #1F7A55;
-    --destructive: #B8434F;
-    --border: var(--sj-line);
-    --input: #C9D4E3;
-    --ring: var(--sj-steel-deep);
-    --shadow-card: 0 1px 2px rgb(23 35 55 / 0.04), 0 6px 20px -8px rgb(23 35 55 / 0.08);
+    --hero: var(--fl-navy);
+    --hero-foreground: var(--fl-snow);
+    --hero-accent: var(--fl-ice);
+    --success: #157A4F;
+    --destructive: #B42E43;
+    --border: var(--fl-line);
+    --input: #CBD9E2;
+    --ring: var(--fl-navy);
+    --shadow-card: 0 1px 2px rgb(14 16 34 / 0.04), 0 6px 20px -8px rgb(0 0 128 / 0.08);
     /* Chart-only shades: validated for colour-blind separation on white */
-    --chart-income: var(--sj-steel-deep);
+    --chart-income: #2B3DB8;
     --chart-expense: #D9707C;
-    --chart-category: #5B7FB0;
-    --chart-1: var(--sj-steel-deep);
-    --chart-2: var(--sj-steel);
+    --chart-category: var(--fl-slate);
+    --chart-1: #2B3DB8;
+    --chart-2: var(--fl-slate);
     --chart-3: #D9707C;
-    --chart-4: var(--sj-navy);
-    --chart-5: var(--sj-silver);
+    --chart-4: var(--fl-navy);
+    --chart-5: var(--fl-ice);
     --radius: 0.625rem;
     --sidebar: #FFFFFF;
-    --sidebar-foreground: var(--sj-ink);
-    --sidebar-primary: var(--sj-navy);
+    --sidebar-foreground: var(--fl-ink);
+    --sidebar-primary: var(--fl-navy);
     --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: var(--sj-silver);
-    --sidebar-accent-foreground: var(--sj-ink);
-    --sidebar-border: var(--sj-line);
-    --sidebar-ring: var(--sj-steel-deep);
+    --sidebar-accent: var(--fl-mist);
+    --sidebar-accent-foreground: var(--fl-ink);
+    --sidebar-border: var(--fl-line);
+    --sidebar-ring: var(--fl-navy);
 }
 
-/* Dark theme: coordinated navy steps. Chart shades validated against --card */
+/* Dark theme: a deep navy night with icy accents. Chart shades validated against --card */
 .dark {
     color-scheme: dark;
-    --background: #172337;
-    --foreground: #F6F8FB;
-    --card: #1E2D43;
-    --card-foreground: #F6F8FB;
-    --popover: #24344D;
-    --popover-foreground: #F6F8FB;
-    --primary: var(--sj-ice);
-    --primary-foreground: var(--sj-ink);
-    --secondary: #24344D;
-    --secondary-foreground: #F6F8FB;
-    --muted: #24344D;
-    --muted-foreground: #B6C5D9;
-    --accent: #405775;
-    --accent-foreground: #F6F8FB;
-    --brand: var(--sj-ice);
-    --brand-foreground: var(--sj-ink);
-    --hero: #24344D;
-    --hero-foreground: #F6F8FB;
-    --hero-accent: var(--sj-ice);
-    --success: #5BC08E;
-    --destructive: #EC8F99;
-    --border: #35465E;
-    --input: #44587A;
-    --ring: var(--sj-steel);
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.2), 0 8px 24px -10px rgb(0 0 0 / 0.35);
-    --chart-income: #5F8CCB;
+    --background: #070B24;
+    --foreground: var(--fl-snow);
+    --card: #0E1535;
+    --card-foreground: var(--fl-snow);
+    --popover: #161F47;
+    --popover-foreground: var(--fl-snow);
+    --primary: var(--fl-ice);
+    --primary-foreground: #000033;
+    --secondary: #161F47;
+    --secondary-foreground: var(--fl-snow);
+    --muted: #161F47;
+    --muted-foreground: #A9B6C6;
+    --accent: #1F2A5E;
+    --accent-foreground: var(--fl-snow);
+    --brand: var(--fl-ice);
+    --brand-foreground: #000033;
+    --brand-soft: var(--fl-slate);
+    --hero: #12227A;
+    --hero-foreground: var(--fl-snow);
+    --hero-accent: var(--fl-ice);
+    --success: #4CC38A;
+    --destructive: #F28B99;
+    --border: #232D5C;
+    --input: #2E3A70;
+    --ring: var(--fl-ice);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.25), 0 8px 24px -10px rgb(0 0 0 / 0.45);
+    --chart-income: #6F8CF0;
     --chart-expense: #D9707C;
-    --chart-category: var(--sj-steel);
-    --sidebar: #1E2D43;
-    --sidebar-foreground: #F6F8FB;
-    --sidebar-primary: var(--sj-ice);
-    --sidebar-primary-foreground: var(--sj-ink);
-    --sidebar-accent: #405775;
-    --sidebar-accent-foreground: #F6F8FB;
-    --sidebar-border: #35465E;
-    --sidebar-ring: var(--sj-steel);
+    --chart-category: var(--fl-ice);
+    --sidebar: #0E1535;
+    --sidebar-foreground: var(--fl-snow);
+    --sidebar-primary: var(--fl-ice);
+    --sidebar-primary-foreground: #000033;
+    --sidebar-accent: #1F2A5E;
+    --sidebar-accent-foreground: var(--fl-snow);
+    --sidebar-border: #232D5C;
+    --sidebar-ring: var(--fl-ice);
 }
 
 @layer base {
