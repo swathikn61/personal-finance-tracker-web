@@ -19,9 +19,9 @@ import { useMoney } from "@/lib/money"
 
 const today = () => new Date().toISOString().slice(0, 10)
 
-const emptyForm = (): EntryInput => ({
+const emptyForm = (type: EntryType = "expense"): EntryInput => ({
   amount: 0,
-  type: "expense",
+  type,
   category: "",
   description: "",
   date: today(),
@@ -40,9 +40,11 @@ interface Props {
   onSubmit: (values: EntryInput) => Promise<number>
   // Called once the entry and its receipt are saved, so the page can reload
   onSaved: () => void | Promise<void>
+  // Type to start a new entry with (e.g. from an "Add income" shortcut)
+  defaultType?: EntryType
 }
 
-export function EntryFormDialog({ open, onOpenChange, entry, onSubmit, onSaved }: Props) {
+export function EntryFormDialog({ open, onOpenChange, entry, onSubmit, onSaved, defaultType }: Props) {
   const money = useMoney()
   const fileInput = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState<EntryInput>(emptyForm)
@@ -61,7 +63,7 @@ export function EntryFormDialog({ open, onOpenChange, entry, onSubmit, onSaved }
     setForm(
       entry
         ? { amount: entry.amount, type: entry.type, category: entry.category, description: entry.description, date: entry.date }
-        : emptyForm(),
+        : emptyForm(defaultType),
     )
     setAmount(entry ? String(entry.amount) : "")
     setError(null)
@@ -84,7 +86,7 @@ export function EntryFormDialog({ open, onOpenChange, entry, onSubmit, onSaved }
       cancelled = true
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
-  }, [open, entry])
+  }, [open, entry, defaultType])
 
   // Revoke object URLs we create for newly picked photos
   useEffect(() => {
@@ -150,7 +152,7 @@ export function EntryFormDialog({ open, onOpenChange, entry, onSubmit, onSaved }
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit} className="grid gap-4">
           <DialogHeader>
-            <DialogTitle>{entry ? "Edit entry" : "Add entry"}</DialogTitle>
+            <DialogTitle>{entry ? "Edit entry" : defaultType === "income" ? "Add income" : defaultType === "expense" ? "Add expense" : "Add entry"}</DialogTitle>
             <DialogDescription>Record an income or expense transaction.</DialogDescription>
           </DialogHeader>
 

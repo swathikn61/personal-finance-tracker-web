@@ -21,6 +21,7 @@
     --animate-grow-x: grow-x 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     --animate-curtain: curtain 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.9s both;
     --animate-scroll-cue: scroll-cue 2s ease-in-out infinite;
+    --animate-sway: sway 5s ease-in-out infinite;
 
     @keyframes fade-up {
         from { opacity: 0; transform: translateY(22px); }
@@ -58,6 +59,10 @@
         51% { transform: scaleY(1); transform-origin: bottom; }
         100% { transform: scaleY(0); transform-origin: bottom; }
     }
+    @keyframes sway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
     @keyframes orbit {
         to { transform: rotate(360deg); }
     }
@@ -87,6 +92,10 @@
     --color-hero-accent: var(--hero-accent);
     --shadow-elevated: var(--shadow-card);
     --color-success: var(--success);
+    --color-mint: var(--mint);
+    --color-mint-foreground: var(--mint-foreground);
+    --color-blush: var(--blush);
+    --color-blush-foreground: var(--blush-foreground);
     --color-brand: var(--brand);
     --color-brand-foreground: var(--brand-foreground);
     --color-accent-foreground: var(--accent-foreground);
@@ -112,24 +121,24 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Spend Journal palette: "Graphite & Emerald". Mostly neutral, one deep emerald accent.
+/* Spend Journal palette: forest green on warm cream, with soft blush and muted mint tints.
    Every color in the app resolves to these tokens. Text pairs checked against WCAG AA;
    chart pairs (emerald income vs amber expense) validated for colour-blind separation. */
 :root {
     color-scheme: light;
     /* palette primitives */
-    --ge-paper: #FAFAF9;
+    --ge-paper: #FAF7F0;
     --ge-graphite: #18181B;
     --ge-stone: #57534E;
     --ge-stone-mid: #78716C;
-    --ge-line: #E7E5E4;
+    --ge-line: #E9E3D6;
     --ge-emerald: #065F46;
     --ge-emerald-mid: #047857;
     --ge-sage: #6B9E8C;
     --ge-mint: #6EE7B7;
-    --ge-tint: #F2F7F5;
-    --ge-tint-strong: #E8F1EE;
-    --ge-forest: #0C1F1A;
+    --ge-tint: #F3EEE3;
+    --ge-tint-strong: #E1EFE6;
+    --ge-forest: #0F2E25;
 
     --background: var(--ge-paper);
     --foreground: var(--ge-graphite);
@@ -155,9 +164,14 @@
     --hero-foreground: var(--ge-paper);
     --hero-accent: var(--ge-mint);
     --success: var(--ge-emerald-mid);
+    /* soft tints for income (mint) and spending (blush) chips and icons */
+    --mint: var(--ge-tint-strong);
+    --mint-foreground: var(--ge-emerald);
+    --blush: #FBE8E4;
+    --blush-foreground: #9A2B2B;
     --destructive: #B4232F;
     --border: var(--ge-line);
-    --input: #D6D3D1;
+    --input: #D9D2C3;
     --ring: #059669;
     --shadow-card: 0 1px 2px rgb(24 24 27 / 0.04), 0 6px 20px -8px rgb(24 24 27 / 0.08);
     /* Chart-only shades: validated for colour-blind separation on white */
@@ -170,7 +184,7 @@
     --chart-4: var(--ge-emerald);
     --chart-5: var(--ge-sage);
     --radius: 0.625rem;
-    --sidebar: #FFFFFF;
+    --sidebar: #FFFDF8;
     --sidebar-foreground: var(--ge-graphite);
     --sidebar-primary: var(--ge-emerald);
     --sidebar-primary-foreground: #FFFFFF;
@@ -200,10 +214,14 @@
     --brand: #34D399;
     --brand-foreground: #052E22;
     --brand-soft: #34D399;
-    --hero: #0F2A23;
+    --hero: #0F2E25;
     --hero-foreground: #F5F5F4;
     --hero-accent: var(--ge-mint);
     --success: #34D399;
+    --mint: #143A2E;
+    --mint-foreground: #6EE7B7;
+    --blush: #3B2422;
+    --blush-foreground: #F4B4AA;
     --destructive: #F2919B;
     --border: #26302D;
     --input: #33403C;
