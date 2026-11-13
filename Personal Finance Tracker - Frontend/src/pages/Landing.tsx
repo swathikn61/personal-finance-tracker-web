@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react"
+import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { Link } from "react-router-dom"
 import { ArrowRightIcon, CheckIcon, PlusIcon } from "lucide-react"
-import { CoinToken, EntryToken, ReceiptToken, StoryKeepVisual, StoryLogVisual, StorySeeVisual } from "@/components/landing/Mockups"
+import { StoryKeepVisual, StoryLogVisual, StorySeeVisual } from "@/components/landing/Mockups"
 import { Reveal } from "@/components/landing/Reveal"
 import { Logo, LogoMark } from "@/components/Logo"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -105,51 +105,37 @@ function useScrollY() {
 
 function Header() {
   const y = useScrollY()
-  const solid = y > 40
+  const solid = y > 24
   const max = typeof document === "undefined" ? 1 : Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-colors duration-300",
-        solid ? "border-b bg-background/85 text-foreground backdrop-blur-lg" : "text-hero-foreground",
+        "fixed inset-x-0 top-0 z-40 text-foreground transition-colors duration-300",
+        solid ? "border-b bg-background/85 backdrop-blur-lg" : "border-b border-transparent",
       )}
     >
       <div
-        className="absolute inset-x-0 top-0 h-0.5 origin-left bg-hero-accent"
+        className="absolute inset-x-0 top-0 h-0.5 origin-left bg-brand"
         style={{ transform: `scaleX(${Math.min(1, y / max)})` }}
         aria-hidden="true"
       />
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 md:px-8">
         <nav aria-label="Sections" className="hidden gap-6 font-mono text-[11px] tracking-[0.18em] uppercase md:flex">
           {navLinks.map((l) => (
-            <a key={l.href} href={l.href} className="opacity-75 transition-opacity hover:opacity-100">
+            <a key={l.href} href={l.href} className="text-muted-foreground transition-colors hover:text-foreground">
               {l.label}
             </a>
           ))}
         </nav>
-        <Link
-          to="/"
-          aria-label="Spend Journal home"
-          className="col-start-1 justify-self-start md:col-start-2 md:justify-self-center"
-          style={solid ? undefined : ({ "--foreground": "var(--hero-foreground)" } as CSSProperties)}
-        >
+        <Link to="/" aria-label="Spend Journal home" className="col-start-1 justify-self-start md:col-start-2 md:justify-self-center">
           <Logo />
         </Link>
         <div className="col-start-3 flex items-center justify-end gap-1 sm:gap-2">
-          <ThemeToggle className={cn(!solid && "text-hero-foreground hover:bg-hero-foreground/10 hover:text-hero-foreground")} />
-          <Button
-            variant="ghost"
-            className={cn(!solid && "text-hero-foreground hover:bg-hero-foreground/10 hover:text-hero-foreground")}
-            nativeButton={false}
-            render={<Link to="/login" />}
-          >
+          <ThemeToggle />
+          <Button variant="ghost" nativeButton={false} render={<Link to="/login" />}>
             Sign in
           </Button>
-          <Button
-            className={cn("hidden rounded-full sm:inline-flex", !solid && "bg-hero-accent text-hero hover:bg-hero-accent/90")}
-            nativeButton={false}
-            render={<Link to="/register" />}
-          >
+          <Button className="hidden rounded-full sm:inline-flex" nativeButton={false} render={<Link to="/register" />}>
             Get started
           </Button>
         </div>
@@ -158,92 +144,71 @@ function Header() {
   )
 }
 
-/* ---------- Hero with mouse-reactive floating tokens ---------- */
+/* ---------- Hero: calm headline beside one product card ---------- */
 
-// depth: how far a token travels with the pointer (px at the screen edge)
-function Floater({ depth, className, delay = 0, children }: { depth: number; className: string; delay?: number; children: ReactNode }) {
+function HeroPreview() {
+  const money = useMoney()
+  const rows = [
+    { name: "Salary", cat: "Income", amount: 64000, income: true },
+    { name: "Groceries", cat: "Food", amount: 2340 },
+    { name: "Electricity", cat: "Utilities", amount: 1200 },
+  ]
   return (
-    <div
-      aria-hidden="true"
-      className={cn("pointer-events-none absolute transition-transform duration-700 ease-out", className)}
-      style={{ transform: `translate3d(calc(var(--mx, 0) * ${depth}px), calc(var(--my, 0) * ${depth}px), 0)` }}
-    >
-      <div className="animate-float" style={{ animationDelay: `${delay}s` }}>
-        {children}
+    <div aria-hidden="true" className="w-full max-w-md rounded-3xl border bg-card p-6 text-card-foreground shadow-elevated sm:p-7">
+      <p className="text-xs font-medium text-muted-foreground">Total balance</p>
+      <p className="mt-1 font-heading text-4xl font-semibold tracking-tight tabular-nums">{money.format(71200)}</p>
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="rounded-xl bg-muted p-3">
+          <p className="text-xs text-muted-foreground">Income</p>
+          <p className="mt-0.5 text-sm font-semibold text-success tabular-nums">{money.format(76000)}</p>
+        </div>
+        <div className="rounded-xl bg-muted p-3">
+          <p className="text-xs text-muted-foreground">Expense</p>
+          <p className="mt-0.5 text-sm font-semibold tabular-nums">{money.format(4800)}</p>
+        </div>
       </div>
+      <ul className="mt-5 divide-y border-t">
+        {rows.map((r) => (
+          <li key={r.name} className="flex items-center justify-between py-3 text-sm">
+            <span>
+              <span className="block font-medium">{r.name}</span>
+              <span className="text-xs text-muted-foreground">{r.cat}</span>
+            </span>
+            <span className={cn("font-semibold tabular-nums", r.income ? "text-success" : "text-destructive")}>
+              {r.income ? "+" : "−"}
+              {money.format(r.amount)}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
 
 function Hero() {
-  const ref = useRef<HTMLElement>(null)
-  const onPointerMove = (e: PointerEvent<HTMLElement>) => {
-    const el = ref.current
-    if (!el || e.pointerType !== "mouse") return
-    const r = el.getBoundingClientRect()
-    el.style.setProperty("--mx", (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3))
-    el.style.setProperty("--my", (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3))
-  }
   return (
-    <section ref={ref} onPointerMove={onPointerMove} className="relative isolate flex min-h-svh items-center overflow-hidden bg-hero text-hero-foreground">
-      <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-hero-accent/20 blur-3xl" />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 opacity-20 [background-image:linear-gradient(var(--hero-foreground)_1px,transparent_1px),linear-gradient(90deg,var(--hero-foreground)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
-      />
-
-      <Floater depth={-28} className="top-[16%] left-[6%] hidden md:block" delay={-1}>
-        <CoinToken symbol="₹" />
-      </Floater>
-      <Floater depth={22} className="top-[22%] right-[8%] hidden md:block" delay={-3}>
-        <EntryToken title="Salary" amount={64000} income />
-      </Floater>
-      <Floater depth={-18} className="bottom-[18%] left-[9%] hidden lg:block" delay={-2}>
-        <EntryToken title="Groceries" amount={2340} />
-      </Floater>
-      <Floater depth={34} className="right-[10%] bottom-[16%] hidden md:block" delay={-4}>
-        <div className="rotate-6">
-          <ReceiptToken />
-        </div>
-      </Floater>
-      <Floater depth={16} className="top-[58%] right-[26%] hidden lg:block" delay={-5}>
-        <CoinToken symbol="$" className="size-12 text-xl" />
-      </Floater>
-      <Floater depth={-12} className="top-[12%] left-[38%] hidden lg:block" delay={-6}>
-        <CoinToken symbol="€" className="size-10 text-lg" />
-      </Floater>
-
-      <div className="mx-auto max-w-4xl px-4 pt-24 pb-20 text-center md:px-8">
-        <p className="animate-fade-up font-mono text-[11px] tracking-[0.3em] text-hero-accent uppercase [animation-delay:var(--intro)]">
-          Personal finance, journaled
-        </p>
-        <h1 className="mt-6 animate-fade-up text-5xl leading-[0.98] font-semibold tracking-tight text-balance [animation-delay:calc(var(--intro)+100ms)] sm:text-6xl md:text-7xl lg:text-8xl">
-          Every rupee <span className="text-hero-accent">tells a story.</span>
+    <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 pt-32 pb-20 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:pt-40 lg:pb-28">
+      <div className="text-center lg:text-left">
+        <p className="animate-fade-up text-sm font-medium text-brand [animation-delay:var(--intro)]">Personal finance, journaled</p>
+        <h1 className="mt-4 animate-fade-up text-4xl leading-[1.05] font-semibold tracking-tight text-balance [animation-delay:calc(var(--intro)+100ms)] sm:text-5xl lg:text-6xl">
+          Every rupee tells a story.
         </h1>
-        <p className="mx-auto mt-6 max-w-xl animate-fade-up text-lg text-pretty text-hero-foreground/75 [animation-delay:calc(var(--intro)+200ms)]">
+        <p className="mx-auto mt-5 max-w-lg animate-fade-up text-lg text-pretty text-muted-foreground [animation-delay:calc(var(--intro)+200ms)] lg:mx-0">
           Spend Journal turns what you earn and spend into a clear picture: live balances, honest trends and a home for every receipt.
         </p>
-        <div className="mt-9 flex animate-fade-up flex-wrap items-center justify-center gap-3 [animation-delay:calc(var(--intro)+300ms)]">
-          <Button size="lg" className="group h-12 rounded-full bg-hero-accent px-7 text-hero hover:bg-hero-accent/90" nativeButton={false} render={<Link to="/register" />}>
+        <div className="mt-8 flex animate-fade-up flex-wrap items-center justify-center gap-3 [animation-delay:calc(var(--intro)+300ms)] lg:justify-start">
+          <Button size="lg" className="group h-11 rounded-full px-6" nativeButton={false} render={<Link to="/register" />}>
             Start your journal
             <ArrowRightIcon className="transition-transform group-hover:translate-x-1" />
           </Button>
-          <Button
-            size="lg"
-            variant="ghost"
-            className="h-12 rounded-full px-7 text-hero-foreground hover:bg-hero-foreground/10 hover:text-hero-foreground"
-            nativeButton={false}
-            render={<a href="#how-it-works" />}
-          >
+          <Button size="lg" variant="outline" className="h-11 rounded-full px-6" nativeButton={false} render={<a href="#how-it-works" />}>
             See how it works
           </Button>
         </div>
       </div>
-
-      <a href="#how-it-works" aria-label="Scroll to how it works" className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-hero-foreground/60 uppercase">
-        Scroll
-        <span className="h-10 w-px animate-scroll-cue bg-hero-foreground/60" />
-      </a>
+      <div className="flex animate-fade-up justify-center [animation-delay:calc(var(--intro)+400ms)] lg:justify-end">
+        <HeroPreview />
+      </div>
     </section>
   )
 }
@@ -258,7 +223,10 @@ function Story() {
       const el = ref.current
       if (!el) return
       const r = el.getBoundingClientRect()
-      const progress = Math.min(1, Math.max(0, -r.top / (r.height - window.innerHeight)))
+      const scrollable = r.height - window.innerHeight
+      // Hidden (mobile) or not yet laid out: stay on the first step instead of dividing by zero
+      if (scrollable <= 0) return setStep(0)
+      const progress = Math.min(1, Math.max(0, -r.top / scrollable))
       setStep(Math.min(steps.length - 1, Math.floor(progress * steps.length)))
     }
     onScroll()
@@ -421,12 +389,12 @@ export function Landing() {
         <Hero />
 
         {/* Marquee band */}
-        <section aria-label="Things you can track" className="overflow-hidden border-y bg-hero-accent py-5 text-hero">
+        <section aria-label="Things you can track" className="overflow-hidden border-y py-4 text-muted-foreground">
           <div className="flex w-max animate-marquee gap-10 hover:[animation-play-state:paused]">
             {[...trackables, ...trackables].map((t, i) => (
-              <span key={i} aria-hidden={i >= trackables.length} className="flex items-center gap-10 font-heading text-2xl font-semibold whitespace-nowrap md:text-3xl">
+              <span key={i} aria-hidden={i >= trackables.length} className="flex items-center gap-10 font-heading text-base font-medium whitespace-nowrap md:text-lg">
                 {t}
-                <span className="text-base opacity-50">✦</span>
+                <span className="text-sm text-brand opacity-60">✦</span>
               </span>
             ))}
           </div>

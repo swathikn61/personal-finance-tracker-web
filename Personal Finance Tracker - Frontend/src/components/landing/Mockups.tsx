@@ -13,36 +13,7 @@ import {
 import { useMoney } from "@/lib/money"
 import { cn } from "@/lib/utils"
 
-/* ---------- Hero floating tokens ---------- */
-
-export function CoinToken({ symbol, className }: { symbol: string; className?: string }) {
-  return (
-    <span
-      className={cn(
-        "flex size-16 items-center justify-center rounded-full border-2 border-hero-accent/50 bg-hero-accent/15 font-heading text-2xl font-semibold text-hero-accent shadow-lg backdrop-blur",
-        className,
-      )}
-    >
-      {symbol}
-    </span>
-  )
-}
-
-export function EntryToken({ title, amount, income }: { title: string; amount: number; income?: boolean }) {
-  const money = useMoney()
-  return (
-    <div className="flex items-center gap-3 rounded-2xl border bg-card p-3 pr-4 text-card-foreground shadow-xl">
-      <span className={cn("flex size-8 items-center justify-center rounded-xl", income ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive")}>
-        {income ? <ArrowDownLeftIcon className="size-4" /> : <ArrowUpRightIcon className="size-4" />}
-      </span>
-      <span className="text-xs font-semibold">{title}</span>
-      <span className={cn("ml-2 text-xs font-semibold tabular-nums", income ? "text-success" : "text-destructive")}>
-        {income ? "+" : "−"}
-        {money.format(amount)}
-      </span>
-    </div>
-  )
-}
+/* ---------- Receipt token ---------- */
 
 export function ReceiptToken() {
   return (
